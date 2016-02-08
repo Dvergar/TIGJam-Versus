@@ -1,0 +1,214 @@
+# def overlap2(Aleft, Atop, Aright, Abottom, Bleft, Btop, Bright, Bbottom):
+    # if Aright <= Bleft:
+        # return False
+    # if Bright <= Aleft:
+        # return False
+    # if Atop <= Bbottom:
+        # return False
+    # if Btop <= Abottom:
+        # return False
+    # return True
+    
+# def d0(v1,v2):
+    # """                                                                                                     
+    # d0 is Nominal approach:                                                                                 
+    # multiply/add in a loop                                                                                  
+    # """
+
+    # out = 0
+    # for k in range(len(v1)):
+        # out += v1[k] * v2[k]
+    # return out
+    
+# def getnorm(a,b):
+    # return sqrt(pow(b[0] - a[0],2) + pow(b[1] - b[1],2))
+    
+# def getnormalizedvector(a,b, N):
+    # try:
+        # return ( (b[0] - a[0]) /N , (b[1] - a[1])/N )
+    # except ZeroDivisionError:
+        # return (0,1)
+    
+# def responsevector(source,reflector):
+    # nu = (-reflector[1], reflector[0])
+    # msource = (source[0]*-1, source[1]*-1)
+    # Rx = source[0] + 2.* nu[0] * d0(msource, nu)
+    # Ry = source[1] + 2.* nu[1] * d0(msource, nu)
+    # return Rx, Ry
+
+# def getslopeandstuff(a,b):
+    # try:
+        # m = (b[1] - a[1]) / (b[0] - a[0])
+    # except ZeroDivisionError:
+        # return (0,0)
+    # b = a[1] - m*a[0]
+    # return m,b
+    
+# def car_above(topleft, topright, bottomright, bottomleft, a,b):
+    # if bottomleft[1] > a*bottomleft[0] + b and bottomright[1] > a*bottomright[0] +b and topleft[1] > a*topleft[0] + b and topright[1] > a*topright[0] +b:
+        # return True
+        
+# def car_below(topleft, topright, bottomright, bottomleft, a,b):
+    # if bottomleft[1] < a*bottomleft[0] + b and bottomright[1] < a*bottomright[0] +b and topleft[1] < a*topleft[0] + b and topright[1] < a*topright[0] +b:
+        # return True
+    
+# def collision(points, car, topleft, topright, bottomright, bottomleft):
+    # corners = (topleft, topright, bottomright, bottomleft)
+    # left = min(x for x, y in corners)
+    # right = max(x for x,y in corners)
+    # top = max(y for x,y in corners)
+    # bottom = min(y for x,y in corners)
+    
+    # for shape in points:
+        # for i, point in enumerate(shape):
+            # if i != len(shape)-1:
+                # linepoints = (shape[i], shape[i+1])
+                # x1,y1 = min(linepoints)
+                # x2,y2 = max(linepoints)
+                # gleft = min(x for x, y in linepoints)
+                # gright = max(x for x,y in linepoints)
+                # gtop = max(y for x,y in linepoints)
+                # gbottom = min(y for x,y in linepoints)
+                
+                # if overlap2(gleft, gtop, gright, gbottom, left, top, right, bottom):
+                    # try:
+                        # a = (y2 - y1) / (x2 - x1)
+                    # except ZeroDivisionError:
+                        # a = 0
+                    # b = y2 - a*x2
+
+                    # if not car_above(topleft, topright, bottomright, bottomleft, a,b) and not car_below(topleft, topright, bottomright, bottomleft, a,b):
+                        # # ANGLE BETWEEN CAR & WALL
+                        # # car
+                        # ca = (car.x, car.y)
+                        # cb = ( (car.topleft[0] + car.topright[0]) / 2., (car.topleft[1] + car.topright[1]) / 2. )
+                        # cN = getnorm(ca,cb)
+                        # cu = getnormalizedvector(ca,cb, cN)
+                        
+                        # # wall
+                        # wa = (x1,y1)
+                        # wb = (x2,y2)
+                        # wN = getnorm(wa,wb)
+                        # wu = getnormalizedvector(wa,wb, wN)
+                        
+                        # #
+                        # return responsevector(cu,wu)
+                    # else:
+                        # return None
+
+# psyco.bind(collision) # FUCKYEAH
+
+
+
+
+###
+
+# class Collision(object):
+    # def __init__(self, points, car):
+        # corners = (car.topleft, car.topright, car.bottomright, car.bottomleft)
+        # self.left = min(x for x, y in corners)
+        # self.right = max(x for x,y in corners)
+        # self.top = max(y for x,y in corners)
+        # self.bottom = min(y for x,y in corners)
+        
+        # self.points = points
+        # self.car = car
+        
+    # def search(self):
+        # for shape in self.points:
+            # for i, point in enumerate(shape):
+                # if i != len(shape)-1:
+                    # if self.collide_lvl1(shape[i], shape[i+1]):
+                        # return self.collide_lvl2()
+                # else:
+                    # if self.collide_lvl1(shape[i], shape[0]):
+                        # return self.collide_lvl2()
+                    
+    # # SQUARE DETECTION
+    # def collide_lvl1(self, this, next):
+        # linepoints = (this, next)
+        # # Segment sorted coords
+        # self.x1,self.y1 = min(linepoints)
+        # self.x2,self.y2 = max(linepoints)
+        # # Segment bounding box
+        # Sleft = min(x for x, y in linepoints)
+        # Sright = max(x for x,y in linepoints)
+        # Stop = max(y for x,y in linepoints)
+        # Sbottom = min(y for x,y in linepoints)
+        
+        # if Sright <= self.left:
+            # return False
+        # if self.right <= Sleft:
+            # return False
+        # if Stop <= self.bottom:
+            # return False
+        # if self.top <= Sbottom:
+            # return False
+        # return True
+        
+    # # SEGMENT DETECTION 
+    # def collide_lvl2(self):
+        # try:
+            # a = (self.y2 - self.y1) / (self.x2 - self.x1)
+        # except ZeroDivisionError:
+            # a = 0
+        # b = self.y2 - a*self.x2
+
+        # if not self.car_above(self.car.topleft, self.car.topright, self.car.bottomright, self.car.bottomleft, a,b) and not self.car_below(self.car.topleft, self.car.topright, self.car.bottomright, self.car.bottomleft, a,b):
+            # print "collision"
+            # # ANGLE BETWEEN CAR & WALL
+            # # car
+            # ca = (self.car.x, self.car.y)
+            # cb = ( (self.car.topleft[0] + self.car.topright[0]) / 2., (self.car.topleft[1] + self.car.topright[1]) / 2. )
+            # cN = self.getnorm(ca,cb)
+            # cu = self.getnormalizedvector(ca,cb, cN)
+            
+            # # wall
+            # wa = (self.x1,self.y1)
+            # wb = (self.x2,self.y2)
+            # wN = self.getnorm(wa,wb)
+            # wu = self.getnormalizedvector(wa,wb, wN)
+            
+            # #
+            # return self.responsevector(cu,wu)
+
+        # else:
+            # return None
+    
+    # def d0(self, v1,v2):
+        # out = 0
+        # for k in range(len(v1)):
+            # out += v1[k] * v2[k]
+        # return out
+        
+    # def getnorm(self, a,b):
+        # return sqrt(pow(b[0] - a[0],2) + pow(b[1] - b[1],2))
+        
+    # def getnormalizedvector(self, a,b, N):
+        # try:
+            # return ( (b[0] - a[0]) /N , (b[1] - a[1])/N )
+        # except ZeroDivisionError:
+            # return (0,1)
+        
+    # def responsevector(self, source,reflector):
+        # nu = (-reflector[1], reflector[0])
+        # msource = (source[0]*-1, source[1]*-1)
+        # Rx = source[0] + 2.* nu[0] * self.d0(msource, nu)
+        # Ry = source[1] + 2.* nu[1] * self.d0(msource, nu)
+        # return Rx, Ry
+
+    # def getslopeandstuff(self, a,b):
+        # try:
+            # m = (b[1] - a[1]) / (b[0] - a[0])
+        # except ZeroDivisionError:
+            # return (0,0)
+        # b = a[1] - m*a[0]
+        # return m,b
+        
+    # def car_above(self, topleft, topright, bottomright, bottomleft, a,b):
+        # if bottomleft[1] > a*bottomleft[0] + b and bottomright[1] > a*bottomright[0] +b and topleft[1] > a*topleft[0] + b and topright[1] > a*topright[0] +b:
+            # return True
+            
+    # def car_below(self, topleft, topright, bottomright, bottomleft, a,b):
+        # if bottomleft[1] < a*bottomleft[0] + b and bottomright[1] < a*bottomright[0] +b and topleft[1] < a*topleft[0] + b and topright[1] < a*topright[0] +b:
+            # return True
