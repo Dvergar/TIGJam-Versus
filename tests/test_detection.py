@@ -7,7 +7,7 @@ np.set_printoptions(threshold='nan')
 
 
 def show_image():
-    image = cv2.imread("assets/map.png")
+    image = cv2.imread("../assets/map.png")
     height, width, _ = image.shape
 
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
@@ -111,11 +111,14 @@ window = pyglet.window.Window(_WIDTH,_HEIGHT, "Pyglet visualization")
 keys = key.KeyStateHandler()
 window.push_handlers(keys)
 
-img = pyglet.resource.image("assets/car2.png")
+pyglet.resource.path = ['../assets']
+pyglet.resource.reindex()
+
+img = pyglet.resource.image("car2.png")
 char = pyglet.sprite.Sprite(img)
 char.x = char.y = 100
 
-img2 = pyglet.resource.image("assets/map.png")
+img2 = pyglet.resource.image("map.png")
 bg = pyglet.sprite.Sprite(img2)
 
 def move(direction):
