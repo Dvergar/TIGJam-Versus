@@ -141,7 +141,7 @@ class Lifebar:
 
 class Explosion(pyglet.sprite.Sprite):
     _registry = []
-    img = pyglet.image.load('explosion3.png')
+    img = pyglet.image.load('assets/explosion3.png')
     def __init__(self, game, x,y):
         self._registry.append(self)
         self.game = game
@@ -173,7 +173,7 @@ class Explosion(pyglet.sprite.Sprite):
 
 class Rocket(Sprite):
     _registry = []
-    img = pyglet.resource.image('rocket.png')
+    img = pyglet.resource.image('assets/rocket.png')
     img.anchor_x = img.width // 2
     img.anchor_y = img.height // 2
     def __init__(self, game, owner, carrot, carx,cary):
@@ -232,7 +232,7 @@ class Rocket(Sprite):
 
 class Car(Sprite):
     _registry = []
-    glowimg = pyglet.image.load('glow.png')
+    glowimg = pyglet.image.load('assets/glow.png')
     glowimg.anchor_x = glowimg.width // 2
     glowimg.anchor_y = glowimg.height // 2
     def __init__(self, game, player, img, x, y, left, up, right, down, fire):
@@ -377,8 +377,8 @@ class Car(Sprite):
 class Bonus(Sprite):
     _registry = []
     imglist = {}
-    imglist['hp'] = pyglet.image.load('health.png')
-    imglist['x2'] = pyglet.image.load('x2.png')
+    imglist['hp'] = pyglet.image.load('assets/health.png')
+    imglist['x2'] = pyglet.image.load('assets/x2.png')
 
     def __init__(self, game, type, x,y):
         self._registry.append(self)
@@ -440,7 +440,7 @@ class Game:
                           x=100,
                           y=200)
 
-        self.menu = pyglet.image.load('menu.png')
+        self.menu = pyglet.image.load('assets/menu.png')
 
         self.helpleft = Mousetext(self, 100, "mouse left")
         self.firstlefthelp = True
@@ -458,7 +458,7 @@ class Game:
     def dostart(self, type):
         self.shapedetector = pyar.ShapeDetector(self.window.width, self.window.height)
         if type == "pic":
-            self.shapedetector.setcapturetype(type, 'map.png')
+            self.shapedetector.setcapturetype(type, 'assets/map.png')
         else:
             self.shapedetector.setcapturetype(type)
         self.getpoints("dummy")
@@ -519,7 +519,7 @@ class Game:
             if button == 1:
                 self.lastpop.append((x,y))
                 if not self.pop[0]:
-                    self.car = Car(self, 0, 'car2.png', x,y, key.LEFT, key.UP, key.RIGHT, key.DOWN, key.P)
+                    self.car = Car(self, 0, 'assets/car2.png', x,y, key.LEFT, key.UP, key.RIGHT, key.DOWN, key.P)
                     self.lifebar = Lifebar(self, self.car, "red", "left")
                     self.pop[0] = True
                     self.firstlefthelp = False
@@ -530,7 +530,7 @@ class Game:
             if button == 4:
                 self.lastpop.append((x,y))
                 if not self.pop[1]:
-                    self.car2 = Car(self, 1, 'car3.png', x,y, key.F, key.T, key.H, key.G, key.W)
+                    self.car2 = Car(self, 1, 'assets/car3.png', x,y, key.F, key.T, key.H, key.G, key.W)
                     self.lifebar2 = Lifebar(self, self.car2, "blue", "right")
                     self.pop[1] = True
                     self.firstrighthelp = False
