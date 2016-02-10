@@ -1,8 +1,9 @@
 import sys
+
 import cv2
-from PIL import Image
 import numpy as np
-np.set_printoptions(threshold='nan')
+from PIL import Image
+
 
 class ShapeDetector:
     def __init__(self, winwidth, winheight):

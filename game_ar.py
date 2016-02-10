@@ -1,14 +1,17 @@
-import pyar
+# import psyco
+from math import cos,sin, radians, fabs, sqrt, pow
+from random import randint, choice
+import cProfile
+import time
+import sys
+import os
+
 import pyglet
 from pyglet.window import key
+
+import pyar
 import math
-from math import cos,sin, radians, fabs, sqrt, pow
-# import psyco
-import cProfile
 import collision
-import time
-from random import randint, choice
-import sys, os
 
 
 def rotate2d(degrees,point,origin):
@@ -25,6 +28,7 @@ def rotate2d(degrees,point,origin):
 
     return newx,newyorz
 # psyco.bind(rotate2d)
+
 
 class Sprite(pyglet.sprite.Sprite):
     def __init__(self, img, x, y, thebatch):
@@ -533,7 +537,6 @@ class Game:
                 else:
                     print "plop2"
                     self.car2.x, self.car2.y = x,y
-
 
 
     def on_draw(self):

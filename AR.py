@@ -1,7 +1,7 @@
 import sys
-# sys.path.append("C:\opencv\build\python\2.7\x86")
-import cv2
 import math
+
+import cv2
 import numpy as np
 np.set_printoptions(threshold='nan')
 
