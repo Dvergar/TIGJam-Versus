@@ -1,7 +1,8 @@
 import sys
-import cv
-import Image
-
+import cv2
+from PIL import Image
+import numpy as np
+np.set_printoptions(threshold='nan')
 
 class ShapeDetector:
     def __init__(self, winwidth, winheight):
@@ -9,15 +10,14 @@ class ShapeDetector:
         self.winheight = winheight
         self.t_min = 80
         self.t_max = 105
-        # self.create_sliders()
 
     def setcapturetype(self, type, img=None):
         self.type = type
         self.img = img
         if type == "cam":
-            self.cam = cv.CaptureFromCAM(-1)
-            cv.SetCaptureProperty( self.cam, cv.CV_CAP_PROP_FRAME_WIDTH, 640  )
-            cv.SetCaptureProperty( self.cam, cv.CV_CAP_PROP_FRAME_HEIGHT, 480  )
+            self.cam = cv2.VideoCapture(0)
+            self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
     def create_sliders(self):
         cv.NamedWindow ("Tweak sliders", 2)
@@ -36,29 +36,21 @@ class ShapeDetector:
 
     def get_points(self):
         if self.type == "pic":
-            image = cv.LoadImage(self.img)
+            image = cv2.imread(self.img)
         elif self.type == "cam":
-            image = cv.QueryFrame(self.cam)
+            _, image = self.cam.read()
 
-        pilimage = Image.fromstring("RGB", cv.GetSize(image), image.tostring())
-        gray = cv.CreateImage((image.width, image.height), 8, 1)
-        edge = cv.CreateImage((image.width, image.height), 8, 1)
+        height, width, channels = image.shape
+        pilimage = Image.frombytes("RGB", (width, height), image.tostring())
+        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        thresh, im_bw = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-        cv.CvtColor(image, gray, cv.CV_BGR2GRAY)
-        cv.Canny(gray, edge, self.t_min, self.t_max, 3)
-
-        storage = cv.CreateMemStorage(0)
-        contours = cv.FindContours(edge,
-                                   storage,
-                                   cv.CV_RETR_TREE,
-                                   cv.CV_CHAIN_APPROX_SIMPLE,
-                                   (0,0))
+        _, contours, _ = cv2.findContours(im_bw,
+                                   cv2.RETR_LIST,
+                                   cv2.CHAIN_APPROX_SIMPLE)
 
         points = []
-        if contours:
-            while contours:
-                seq = [(x,y) for x,y in contours if x < self.winwidth]
-                points.append(seq);
-                contours = contours.h_next()
+        for shape in contours:
+            points.append([point[0] for point in shape])
 
         return points, pilimage

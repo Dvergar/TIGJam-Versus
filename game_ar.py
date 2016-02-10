@@ -224,8 +224,6 @@ class Rocket(Sprite):
                         car.update_hp(-self.owner.dmg)
                         self._registry.remove(self)
 
-
-
 # psyco.bind(Rocket)
 
 class Car(Sprite):
@@ -244,7 +242,6 @@ class Car(Sprite):
         self.img.anchor_x = self.img.width // 2
         self.img.anchor_y = self.img.height // 2
         Sprite.__init__(self, self.img, x, y, self.game.mybatch)
-
 
         self.glowsprite = pyglet.sprite.Sprite(self.glowimg, self.x, self.y)
         self.glowsprite.opacity = 0
@@ -481,7 +478,7 @@ class Game:
 
     def getpoints(self, dt):
         self.points, self.bgimg = self.shapedetector.get_points()
-        self.bg = pyglet.image.ImageData(640, 480, self.bgimg.mode, self.bgimg.tostring())
+        self.bg = pyglet.image.ImageData(640, 480, self.bgimg.mode, self.bgimg.tobytes())
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:

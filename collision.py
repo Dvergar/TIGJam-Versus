@@ -10,8 +10,7 @@ class Collision(object):
         self.axe = (0,0)
         self.overlap = 9999999999999999999999
         self.happened = False
-##        self.vcar = (self.car.oldx - self.car.x, self.car.oldy - self.car.y)
-##        self.axecar = self.getAxe(self.vcar)
+
         if self.find_collision():
             self.happened = True
 
