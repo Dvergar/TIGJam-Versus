@@ -9,14 +9,14 @@ import os
 import pyglet
 from pyglet.window import key
 
-import pyar
+import detector
 import math
 import collision
 
 
 def rotate2d(degrees,point,origin):
     """
-    A rotation function that rotates a point around a point
+    A rotation function that rotates a point around a pointdetector
     to rotate around the origin use [0,0]
     """
     x = point[0] - origin[0]
@@ -456,7 +456,7 @@ class Game:
         Bonus(self, bonus, x,y)
 
     def dostart(self, type):
-        self.shapedetector = pyar.ShapeDetector(self.window.width, self.window.height)
+        self.shapedetector = detector.ShapeDetector(self.window.width, self.window.height)
         if type == "pic":
             self.shapedetector.setcapturetype(type, 'assets/map.png')
         else:
